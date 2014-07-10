@@ -240,7 +240,6 @@ class Share(object):
         self.merkle_link = contents['merkle_link']
         
         if not (2 <= len(self.share_info['share_data']['coinbase']) <= 100):
-            print "LOLOL--> %s" %self.share_info
             raise ValueError('''bad coinbase size! %i bytes''' % (len(self.share_info['share_data']['coinbase']),))
         
         if len(self.merkle_link['branch']) > 16:

@@ -96,7 +96,7 @@ class WorkerBridge(worker_interface.WorkerBridge):
                     bits=bb['bits'], # not always true
                     coinbaseflags='',
                     height=t['height'] + 1,
-                    time=bb['time'] + 60, # better way?
+                    time=t['time'] + 30, # better way?
                     transactions=[],
                     transaction_fees=[],
                     txn_timestamp=0,
