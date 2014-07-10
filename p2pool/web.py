@@ -6,6 +6,7 @@ import os
 import sys
 import time
 import traceback
+import struct
 
 from twisted.internet import defer, reactor
 from twisted.python import log
@@ -13,6 +14,7 @@ from twisted.web import resource, static
 
 import p2pool
 from bitcoin import data as bitcoin_data
+from bitcoin import script
 from . import data as p2pool_data, p2p
 from util import deferral, deferred_resource, graph, math, memory, pack, variable
 
@@ -223,10 +225,25 @@ def get_web_root(wb, datadir_path, bitcoind_getinfo_var, stop_event=variable.Eve
     ))))
     web_root.putChild('peer_versions', WebInterface(lambda: dict(('%s:%i' % peer.addr, peer.other_sub_version) for peer in node.p2p_node.peers.itervalues())))
     web_root.putChild('payout_addr', WebInterface(lambda: bitcoin_data.pubkey_hash_to_address(wb.my_pubkey_hash, node.net.PARENT)))
+    
+    def unpack_height(coinbase):
+        (_, data) = list(script.parse(coinbase))[0]
+        first = ord(data)
+        if first < 0xfd:
+            return first
+        if first == 0xfd:
+            return struct.unpack('<H', data[1::])[0]
+        elif first == 0xfe:
+            return struct.unpack('<I', data[1::])[0]
+        elif first == 0xff:
+            return struct.unpack('<Q', data[1::])[0]
+        else:
+            raise ValueError("Invalid height in coinbase")
+    
     web_root.putChild('recent_blocks', WebInterface(lambda: [dict(
         ts=s.timestamp,
         hash='%064x' % s.header_hash,
-        number=pack.IntType(24).unpack(s.share_data['coinbase'][1:4]) if len(s.share_data['coinbase']) >= 4 else None,
+        number=unpack_height(s.share_data['coinbase']) if len(s.share_data['coinbase']) >= 1 else None,
         share='%064x' % s.hash,
     ) for s in node.tracker.get_chain(node.best_share_var.value, min(node.tracker.get_height(node.best_share_var.value), 24*60*60//node.net.SHARE_PERIOD)) if s.pow_hash <= s.header['bits'].target]))
     web_root.putChild('uptime', WebInterface(lambda: time.time() - start_time))
