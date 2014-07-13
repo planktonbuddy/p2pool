@@ -52,7 +52,7 @@ Notes for Krillcoin:
 Requirements:
 -------------------------
 In order to run P2Pool with the Krillcoin network, you would need to build and install the
-ltc_scrypt module that includes the scrypt proof of work code that Krillcoin uses for hashes.
+skeinhash module that includes the skein proof of work code that Krillcoin uses for hashes.
 
 Linux:
 
