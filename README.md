@@ -84,8 +84,8 @@ http://stackoverflow.com/questions/6034390/compiling-with-cython-and-mingw-produ
 Running P2Pool:
 -------------------------
 Start p2pool with run_p2pool.py
-Run your miner program, connecting to 127.0.0.1 on port 9327.
-Forward port 9338 to the host running P2Pool.
+Run your miner program, connecting to 127.0.0.1 on port 31237.
+Forward port 31235 to the host running P2Pool.
 
 Sponsors:
 -------------------------
