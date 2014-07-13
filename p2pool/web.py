@@ -228,7 +228,7 @@ def get_web_root(wb, datadir_path, bitcoind_getinfo_var, stop_event=variable.Eve
     
     def unpack_height(coinbase):
         (_, data) = list(script.parse(coinbase))[0]
-        first = ord(data)
+        first = ord(data[0])
         if first < 0xfd:
             return first
         if first == 0xfd:
