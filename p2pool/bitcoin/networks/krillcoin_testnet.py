@@ -7,10 +7,10 @@ from .. import data, helper
 from p2pool.util import pack
 
 
-P2P_PREFIX = 'fe0cf2db'.decode('hex')
+P2P_PREFIX = 'fd0cf2db'.decode('hex')
 P2P_PORT = 32124
 ADDRESS_VERSION = 48
-RPC_PORT = 32123
+RPC_PORT = 32125
 RPC_CHECK = defer.inlineCallbacks(lambda bitcoind: defer.returnValue(
             'krillcoinaddress' in (yield bitcoind.rpc_help()) and
             (yield bitcoind.rpc_getinfo())['testnet']
